@@ -129,12 +129,16 @@ local get_length_with_graphics = co.create(function()
     end
 
     if item == 'footer' and db.custom_footer == nil then
-      local default_footer = {'','🎉 Have fun with neovim'}
-      if packer_plugins ~= nil then
-        local count = #vim.tbl_keys(packer_plugins)
-        default_footer[2] = '🎉 neovim loaded '.. count .. ' plugins'
-      end
-      return default_footer
+        local default_footer = {'','🎉 Have fun with neovim'}
+        if packer_plugins == nil then
+            local handle = io.popen('ls  $HOME"/.vim/plugged" | wc -l ')
+            local count = ''
+            count = handle:read("*a")
+            handle:close()
+            count = count:gsub("^%s*(.-)%s*$", "%1")
+          default_footer[2] = '🎉 neovim loaded '.. count .. ' plugins.'
+        end
+        return default_footer
     end
 
     if item == 'center' then
